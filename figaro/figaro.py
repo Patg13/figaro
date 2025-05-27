@@ -17,6 +17,8 @@ try:
 except ImportError:
     import defaults.standard as default
 
+import multiprocessing
+import coresSetting
 
 def getApplicationParameters():
     import sys
@@ -49,6 +51,9 @@ def getApplicationParameters():
     )
     parameters.addParameter(
         "fileNamingStandard", str, default="nononsense", externalValidation=True
+    )
+    parameters.addParameter(
+        "cores",int,default = 0, lowerBound=0, upperBound=max([multiprocessing.cpu_count() - 1, 1])
     )
     parameters.checkCreatedFileStructures()
     if (
@@ -150,6 +155,7 @@ def parseArgs():
         default="nononsense",
     )
     parser.add_argument("-l", "--logFile", help="Log file path", default=None)
+    parser.add_argument("-c", "--cores", help = "Number of cores to use for multiprocessing [CALCULATED DEFAULT: "+str(max([multiprocessing.cpu_count() - 1, 1]))+"]", default=0, type=int)
     return parser.parse_args()
 
 
@@ -159,6 +165,7 @@ def getApplicationParametersFromCommandLine():
     args = parseArgs()
     outputFileName = args.outputFileName
     ampliconLength = args.ampliconLength
+    cores = args.cores
     if not args.fileNamingStandard.lower() in fileNamingStandards.aliasList.keys():
         raise ValueError(
             "%s is not a valid naming standard alias" % args.fileNamingStandard
@@ -222,6 +229,7 @@ def getApplicationParametersFromCommandLine():
     parameters.sideLoadParameter("percentile", percentile)
     parameters.sideLoadParameter("minimumCombinedReadLength", combinedReadLengths)
     parameters.sideLoadParameter("fileNamingStandard", fileNamingStandard)
+    parameters.sideLoadParameter("cores", cores)
     return parameters
 
 
@@ -375,6 +383,7 @@ def main():
     startTime = datetime.datetime.now()
     setLogging()
     parameters = getApplicationParameters()
+    coresSetting.coreLimit=parameters.cores.value
     fileNamingStandard = parameters.fileNamingStandard.value
     resultTable, forwardCurve, reverseCurve = (
         trimParameterPrediction.performAnalysisLite(
