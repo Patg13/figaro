@@ -1,6 +1,7 @@
 import multiprocessing
 import multiprocessing.pool
 import logging
+import coresSetting
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +39,7 @@ class Deadpool(multiprocessing.pool.Pool):  # Deadpool has no class
 def parallelProcessRunner(
     processor,
     itemsToProcess,
-    coreLimit: int = 0,
+    coreLimit:int = coresSetting.coreLimit,
     filterFunction=False,
     totalSizeEstimate=None,
     coresPerProcess=1,
