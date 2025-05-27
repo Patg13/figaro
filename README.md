@@ -5,6 +5,10 @@
 #### Publication
 Please see [FIGARO: An efficient and objective tool for optimizing microbiome rRNA gene trimming parameters](https://www.biorxiv.org/content/10.1101/610394v1 "Preprint version")
 
+## Information on this fork
+
+This fork was designed to give user control over the number of cores Figaro will use during runtime, it is important to have this kind of control, especially in an HPC environment, where calculated cores are not always reflecting the amount allocated for a specific job, leading to problems. The rest of the code was not altered. 
+ 
 ## Quick Start Guide
 
 #### Docker
