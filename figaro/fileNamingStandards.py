@@ -225,7 +225,7 @@ def loadNamingStandard(name: str):
         "illumina": IlluminaStandard,
         "keriksson": KErickssonStandard,
         "nononsense": NoNonsenseNamingStandard,
-        "nononsenselegacy": NoNonsenseLegacyNamingStandard
+        "nononsenselegacy": NoNonsenseLegacyNamingStandard,
         "fvieira": FVieiraStandard,
         "yzhang": YZhangStandard,
     }
