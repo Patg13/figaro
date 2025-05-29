@@ -6,6 +6,7 @@ aliasList = {
     "illumina": "illumina",
     "keriksson": "keriksson",
     "nononsense": "nononsense",
+    "nononsenselegacy": "nononsenselegacy",
     "fvieira": "fvieira",
     "yzhang": "yzhang",
 }
@@ -70,6 +71,23 @@ class NamingStandard(object):
     def __xor__(self, other):
         return self.sameSample(other)
 
+
+class NoNonsenseLegacyNamingStandard(NamingStandard):
+
+    def getSampleInfo(self, fileName: str):
+        import re
+        import os
+
+        regex = '_R?([12])(_\\d\\d\\d)?$'
+        baseName = re.sub("\.(fq|fastq)(.gz)?$", "", os.path.basename(fileName))
+        regexResult = re.search(regex, baseName)
+        if not regexResult:
+            raise ValueError(
+                "Could not infer read orientation from filename: {}".format(fileName)
+            )
+        direction = int(regexResult[1])
+        sample = group = re.sub(regex, "", baseName)
+        return group, sample, direction
 
 class NoNonsenseNamingStandard(NamingStandard):
 
@@ -207,6 +225,7 @@ def loadNamingStandard(name: str):
         "illumina": IlluminaStandard,
         "keriksson": KErickssonStandard,
         "nononsense": NoNonsenseNamingStandard,
+        "nononsenselegacy": NoNonsenseLegacyNamingStandard
         "fvieira": FVieiraStandard,
         "yzhang": YZhangStandard,
     }
