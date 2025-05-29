@@ -48,7 +48,8 @@ def parallelProcessRunner(
     logger.debug("Running import statements")
     import multiprocessing
     import inspect
-    import collections
+    #import collections
+    import collections.abc as collections
 
     logger.debug("Making assertions")
     assert callable(processor), "Processor must be a callable function/method"
